@@ -256,6 +256,107 @@ git add .
 git commit -m "message"
 ```
 
+### Remote Management
+
+```bash
+# Add remote
+git remote add origin https://github.com/USERNAME/REPO.git
+
+# Check remotes
+git remote -v
+
+# Update remote URL
+git remote set-url origin https://github.com/USERNAME/REPO.git
+
+# Remove remote
+git remote remove origin
+```
+
+### Push to GitHub
+
+```bash
+# First push
+git push -u origin main
+
+# Subsequent pushes
+git push
+
+# Force push (use with caution - rewrites history)
+git push -f origin main
+```
+
+### Reset History
+
+```bash
+# Reset to previous commit (keeps changes)
+git reset --soft HEAD~1
+
+# Reset to previous commit (discards changes)
+git reset --hard HEAD~1
+
+# Completely restart git history
+rm -rf .git && git init
+```
+
+### Remove Sensitive Data
+
+```bash
+# Find and replace API keys in all files
+find . -type f \( -name "*.py" -o -name "*.ipynb" \) -exec sed -i '' 's/sk-proj-[A-Za-z0-9_-]*/YOUR_API_KEY_HERE/g' {} +
+```
+
+### View Commit History
+
+```bash
+git log
+git log --oneline        # Compact view
+```
+
+## Security Best Practices
+
+### Protecting API Keys
+
+**Never commit API keys to GitHub!**
+
+1. **Use environment variables:**
+
+```bash
+export OPENAI_API_KEY='your-key-here'
+```
+
+2. **Use .env files:**
+
+```python
+# .env file (add to .gitignore)
+OPENAI_API_KEY=your-key-here
+
+# Load in Python
+from dotenv import load_dotenv
+load_dotenv()
+```
+
+3. **Use placeholders in code:**
+
+```python
+llm_config = {
+    "model": "gpt-3.5-turbo",
+    "api_key": "YOUR_API_KEY_HERE"  # Replace when running
+}
+```
+
+### If API Keys Are Exposed
+
+1. **Immediately revoke** at https://platform.openai.com/api-keys
+2. **Generate new keys**
+3. **Clean git history:**
+
+```bash
+rm -rf .git
+git init
+git add .
+git commit -m "Initial commit"
+```
+
 ## Common Issues & Solutions
 
 ### Import Error: "autogen" could not be resolved
@@ -277,6 +378,18 @@ git commit -m "message"
 ### Python version incompatibility
 
 **Solution:** Use Python 3.11 (pyautogen 0.2.0 supports ≤3.12)
+
+### GitHub push rejected - secrets detected
+
+**Solution:** Replace API keys with placeholders, reset git history, revoke old keys
+
+### Import "matplotlib" or "yfinance" not found
+
+**Solution:** `pip install matplotlib yfinance`
+
+### Git remote already exists error
+
+**Solution:** `git remote set-url origin <new-url>` or `git remote remove origin` then add again
 
 ## Keyboard Shortcuts (VS Code)
 

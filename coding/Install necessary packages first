@@ -1,6 +1,8 @@
 # Install necessary packages first
 # sh
-pip install yfinance matplotlib pandas
+# pip install yfinance 
+# pip install matplotlib 
+# pip install pandas
 
 # filename: asset_analysis.py
 import yfinance as yf
