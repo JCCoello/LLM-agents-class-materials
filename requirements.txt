@@ -1,0 +1,8 @@
+# OpenAI API
+openai
+
+# Environment Management
+python-dotenv
+
+# Optional but useful
+requests

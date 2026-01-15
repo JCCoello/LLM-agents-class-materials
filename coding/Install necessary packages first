@@ -1,0 +1,48 @@
+# Install necessary packages first
+# sh
+pip install yfinance matplotlib pandas
+
+# filename: asset_analysis.py
+import yfinance as yf
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def normalize_series(series):
+    return series / series.iloc[0]
+
+# Set the start and end dates
+end_date = "2026-01-15"
+start_date = "2021-01-15"
+
+# Fetch data for NVDA and BTC-USD
+nvda_data = yf.download('NVDA', start=start_date, end=end_date)['Adj Close']
+btc_data = yf.download('BTC-USD', start=start_date, end=end_date)['Adj Close']
+
+# Normalize the prices
+nvda_norm = normalize_series(nvda_data)
+btc_norm = normalize_series(btc_data)
+
+# Calculate 60-week moving average
+nvda_ma = nvda_norm.rolling(window=60*5, min_periods=1).mean()
+btc_ma = btc_norm.rolling(window=60*5, min_periods=1).mean()
+
+# Print normalized prices
+print("Normalized NVDA Prices:")
+print(nvda_norm.tail())
+print("Normalized BTC-USD Prices:")
+print(btc_norm.tail())
+
+# Plotting
+plt.figure(figsize=(14, 7))
+plt.plot(nvda_norm.index, nvda_norm, label='NVDA Normalized Price', color='blue')
+plt.plot(btc_norm.index, btc_norm, label='BTC-USD Normalized Price', color='orange')
+plt.plot(nvda_ma.index, nvda_ma, label='NVDA 60 Weeks MA', color='green', linestyle='--')
+plt.plot(btc_ma.index, btc_ma, label='BTC-USD 60 Weeks MA', color='red', linestyle='--')
+
+plt.title('Normalized Prices of NVDA and BTC-USD with 60 Weeks Moving Average')
+plt.xlabel('Date')
+plt.ylabel('Normalized Price')
+plt.legend()
+plt.grid(True)
+plt.savefig('asset_analysis.png')
+plt.show()

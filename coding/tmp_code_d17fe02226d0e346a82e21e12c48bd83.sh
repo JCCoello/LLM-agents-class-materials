@@ -1,0 +1,1 @@
+pip install -qqq pandas_datareader pandas numpy matplotlib
